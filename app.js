@@ -12,6 +12,8 @@ var newSearchDiv;
 var pageHeader;
 var newInput;
 var newButton;
+var namesArray;
+var emailsArray;
 
 // Section 1: Initial state
 //if no javascript, all listings show. so must add initial hidden class dynamically
@@ -121,3 +123,25 @@ newButton = document.createElement("BUTTON");
 newSearchDiv.appendChild(newButton);
 newButtonText = document.createTextNode("Search");
 newButton.appendChild(newButtonText);
+
+//Link search button to searchListings function
+newButton.addEventListener("click", searchListings());
+//Also link input field keyup to searchListings function
+//newInput.addEventListener("keyup", searchListings);
+//On keydown? on search field, clear placeholder
+
+//first, create two arrays from student listings, one for names and one for emails
+var namesArray = document.getElementsByTagName("h3");
+var emailsArray = document.getElementsByClassName("email");
+
+
+//This function will search listings for a match
+//indexOf returns -1 if it is not in the array
+function searchListings() {
+  for (var k=0; k<totalStudentListings.length; k++){
+      if ( (namesArray.indexOf(newInput.value) > -1) || (emailsArray.indexOf(newInput.value) > -1) ) {
+      //add students details to totalSearchListings arrays
+      totalSearchListings += totalStudentListings[k];
+      }
+  }
+}
