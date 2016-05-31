@@ -15,6 +15,9 @@ var newInput;
 var newButton;
 var namesArray;
 var emailsArray;
+var input;
+var counter = 0;
+var htmlversion;
 
 // Section 1: Initial state
 // When document loads, hide all but first 10 students.
@@ -74,16 +77,21 @@ function paginate(){
   console.log(anchors);
 
   //When you click on an anchor, call displayListings function
-  for (var i=0; i<anchors.length; i++) {
-      anchors[i].addEventListener("click", displayListings(i));
-      console.log("Click link added.");
 
-  }
+/*for (var i=0; i<anchors.length; i++) {
+          anchors[i].addEventListener("click", displayListings(i));
+          console.log("Click link added.");
+}*/
+
+for (var i=0; i<anchors.length; i++) {
+    // This function will show the relevant 10 listings, depending on which anchor is clicked.
+          anchors[i].addEventListener("click", displayListings(i));
 
 
-  // This function will show the relevant 10 listings, depending on which anchor is clicked.
-  function displayListings(i){
 
+
+  function displayListings(){
+    console.log("displayListings called");
       return function(){
         console.log("You clicked button number " + (i+1));
         //clear initial display class on ul
@@ -110,9 +118,11 @@ function paginate(){
 }
 paginate();
 
+
 // How to reset listings when search button is pressed, or in case of dynamic search, on keydown. But then,
 // if someone leaves search field, the normal pagination filter should still work
 // So just set listings back to totalStudentListings
+
 
 // Section 3: Search
 
@@ -122,36 +132,57 @@ newSearchDiv.className += ("student-search");
 pageHeader = document.getElementById("pageheader");
 pageHeader.appendChild(newSearchDiv);
 newInput = document.createElement("INPUT");
+newInput.id += ("searchinput");
 newInput.placeholder = "Search for students...";
 newSearchDiv.appendChild(newInput);
 newButton = document.createElement("BUTTON");
+newButton.id += ("searchbutton");
 newSearchDiv.appendChild(newButton);
 newButtonText = document.createTextNode("Search");
 newButton.appendChild(newButtonText);
 
 
-//Link search button to searchListings function
-newButton.addEventListener("click", searchListings);
+// Link search button to searchListings function
+//newButton.addEventListener("click", searchListings);
 //Also link input field keyup to searchListings function
 //newInput.addEventListener("keyup", searchListings);
 //On keydown? on search field, clear placeholder
 
-
-//first, create two arrays from student listings, one for names and one for emails
-var namesArray = document.getElementsByTagName("h3");
-console.log(namesArray);
-var emailsArray = document.getElementsByClassName("email");
-console.log(emailsArray);
-
-//This function will search listings for a match
-//indexOf returns -1 if it is not in the array
-function searchListings() {
+//When search button is pressed, this function will search listings for a match
+$("#searchbutton").click(function() {
   console.log("Search started");
-  listings = totalSearchListings;
-//  for (var k=0; k<totalStudentListings.length; k++){
-//      if ( (namesArray.indexOf(newInput.value) > -1) || (emailsArray.indexOf(newInput.value) > -1) ) {
-//      //add students details to totalSearchListings arrays
-//      totalSearchListings += totalStudentListings[k];
-//      }
-//  }
-}
+  counter = 0;
+  //totalSearchListings = "";
+    // Get text in search field
+    var searchtext = $("#searchinput").val().toLowerCase();
+    console.log(searchtext);
+    // Loop over student listings
+      $(".student-item.cf").each(function(){
+        // If listing already has "hidden" class, remove it
+         if ($(this).hasClass("hidden")) {
+           $(this).removeClass("hidden");
+         }
+         //console.log($(this).find("h3").text());
+         //console.log($(this).find(".email").text());
+
+          // Search for match; indexOf returns -1 if it is not in the array
+          if ( ( ($(this).find("h3").text().toLowerCase().indexOf(searchtext)) < 0) ||   ((($(this).find(".email").text().toLowerCase().indexOf(searchtext)) < 0) ) ) {
+          // console.log("This listing is not a match.");
+//            $(this).addClass("hidden");
+          }
+          else {
+            console.log("This listing is a match.")
+            counter += 1;
+            $(this).addClass("showsearch");
+          }
+      })
+   $(".pagination").remove();
+   $("#list").removeClass("initialhide");
+   totalSearchListings = document.getElementsByClassName("showsearch");
+   if (counter === 0) {
+      alert("I'm sorry, there were no results found.");
+    } else {
+      listings = totalSearchListings;
+      paginate();
+    }
+})
