@@ -122,7 +122,13 @@ ul.initialhide .student-item.cf:nth-of-type(n+11){
     display: none;
 }
 
+/*.showsearch:nth-of-type(n+11){
+  display: none;
+}*/
 
+/*.showsearch:nth-of-type(n+11){
+    display: none;
+}*/
 
 .hidden {
     display: none;

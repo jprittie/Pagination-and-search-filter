@@ -13,8 +13,7 @@ var newSearchDiv;
 var pageHeader;
 var newInput;
 var newButton;
-var namesArray;
-var emailsArray;
+var thisAnchor;
 var input;
 var counter = 0;
 var htmlversion;
@@ -77,44 +76,55 @@ function paginate(){
   console.log(anchors);
 
   //When you click on an anchor, call displayListings function
-
-/*for (var i=0; i<anchors.length; i++) {
-          anchors[i].addEventListener("click", displayListings(i));
-          console.log("Click link added.");
-}*/
-
-for (var i=0; i<anchors.length; i++) {
-    // This function will show the relevant 10 listings, depending on which anchor is clicked.
-          anchors[i].addEventListener("click", displayListings(i));
-
-
-
-
-  function displayListings(){
-    console.log("displayListings called");
-      return function(){
-        console.log("You clicked button number " + (i+1));
-        //clear initial display class on ul
-        visible.classList.remove("initialhide");
-        console.log(visible.classList);
-
-          startingRange = (i*10);
-          console.log(startingRange);
-          endingRange = ((i+1)*10-1);
-          console.log(endingRange);
-
-          // This for loop sets display to none for all items in listings array that aren't needed
-           for (var j=0; j<listings.length; j++) {
-             // But first, remove any instances of "hidden" class that have been added to listings
-             listings[j].className = "student-item cf";
-             if (j < startingRange || j > endingRange) {
-                  console.log("Item " + j + " is not in the range.");
-                  listings[j].classList.add("hidden");
-                  console.log(listings[j]);
-              }
-           }
-        }
+  for (var i=0; i<anchors.length; i++) {
+            anchors[i].addEventListener("click", displayListings(i));
+            console.log("Click link added.");
   }
+
+  // This function will show the relevant 10 listings, depending on which anchor is clicked.
+  function displayListings(i){
+
+           return function(){
+              console.log("You clicked button number " + (i+1));
+              //clear initial display class on ul
+              visible.classList.remove("initialhide");
+              console.log(visible.classList);
+              // clear any existing display classes on listings
+              //totalStudentListings.classList = "student-item cf";
+            //  console.log(totalStudentListings.className);
+             if ($(".student-item.cf").hasClass("hidden")) {
+                $(".student-item.cf").removeClass("hidden");
+              }
+
+                startingRange = (i*10);
+                console.log(startingRange);
+                endingRange = ((i+1)*10-1);
+                console.log(endingRange);
+
+              /*  //If listings === totalSearchListings, then anything not in totalSearchListings
+                //needs a class of hidden
+                if (listings === totalSearchListings) {
+                  for (q=0; q<totalStudentListings; q++) {
+                    if (listings[q].classList = ("student cf")) {
+                      listings[q].classList = ("student cf hidden")
+                    }
+                  }
+                }*/
+                $(".dontshow").addClass("hidden");
+
+                // This for loop sets display to none for all items in listings array that aren't needed
+                 for (var j=0; j<listings.length; j++) {
+                   console.log(listings[j]);
+                   // But first, remove any instances of "hidden" class that have been added to listings
+                  // listings[j].className = "student-item cf";
+                   if (j < startingRange || j > endingRange) {
+                        console.log("Item " + j + " is not in the range.");
+                        listings[j].classList.add("hidden");
+                        console.log(listings[j]);
+                    }
+                 }
+            }
+   }
 }
 paginate();
 
@@ -142,11 +152,7 @@ newButtonText = document.createTextNode("Search");
 newButton.appendChild(newButtonText);
 
 
-// Link search button to searchListings function
-//newButton.addEventListener("click", searchListings);
-//Also link input field keyup to searchListings function
-//newInput.addEventListener("keyup", searchListings);
-//On keydown? on search field, clear placeholder
+
 
 //When search button is pressed, this function will search listings for a match
 $("#searchbutton").click(function() {
@@ -162,13 +168,22 @@ $("#searchbutton").click(function() {
          if ($(this).hasClass("hidden")) {
            $(this).removeClass("hidden");
          }
+
+         if ($(this).hasClass("showsearch")) {
+           $(this).removeClass("showsearch");
+         }
+
+         if ($(this).hasClass("dontshow")) {
+           $(this).removeClass("dontshow");
+         }
          //console.log($(this).find("h3").text());
          //console.log($(this).find(".email").text());
 
           // Search for match; indexOf returns -1 if it is not in the array
           if ( ( ($(this).find("h3").text().toLowerCase().indexOf(searchtext)) < 0) ||   ((($(this).find(".email").text().toLowerCase().indexOf(searchtext)) < 0) ) ) {
-          // console.log("This listing is not a match.");
-//            $(this).addClass("hidden");
+              console.log("This listing is not a match.");
+              $(this).addClass("hidden");
+              $(this).addClass("dontshow");
           }
           else {
             console.log("This listing is a match.")
@@ -178,10 +193,15 @@ $("#searchbutton").click(function() {
       })
    $(".pagination").remove();
    $("#list").removeClass("initialhide");
-   totalSearchListings = document.getElementsByClassName("showsearch");
+
+
    if (counter === 0) {
       alert("I'm sorry, there were no results found.");
     } else {
+      totalSearchListings = document.getElementsByClassName("showsearch");
+          for (var m=10; m<totalSearchListings.length; m++) {
+            totalSearchListings[m].classList.add("hidden");
+          }
       listings = totalSearchListings;
       paginate();
     }
