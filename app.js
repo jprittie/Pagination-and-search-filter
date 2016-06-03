@@ -85,6 +85,7 @@ function paginate(){
   function displayListings(i){
 
            return function(){
+
               console.log("You clicked button number " + (i+1));
               //clear initial display class on ul
               visible.classList.remove("initialhide");
@@ -95,6 +96,8 @@ function paginate(){
              if ($(".student-item.cf").hasClass("hidden")) {
                 $(".student-item.cf").removeClass("hidden");
               }
+
+
 
                 startingRange = (i*10);
                 console.log(startingRange);
@@ -110,7 +113,7 @@ function paginate(){
                     }
                   }
                 }*/
-                $(".dontshow").addClass("hidden");
+                $(".searchhide").addClass("hidden");
 
                 // This for loop sets display to none for all items in listings array that aren't needed
                  for (var j=0; j<listings.length; j++) {
@@ -119,14 +122,25 @@ function paginate(){
                   // listings[j].className = "student-item cf";
                    if (j < startingRange || j > endingRange) {
                         console.log("Item " + j + " is not in the range.");
-                        listings[j].classList.add("hidden");
+                        //listings[j].classList.add("hidden");
+                        $(listings).eq(j).addClass("hidden");
+
                         console.log(listings[j]);
-                    }
+                    }  /*else {
+                        $(listings).eq(j).fadeIn("slow");
+                    }*/
+                      /* else {
+                        listings[j].className += ("fadein");
+                        $(".fadein").fadeIn();
+                      } */
                  }
+                // $("html").fadeIn();
             }
    }
 }
+
 paginate();
+
 
 
 // How to reset listings when search button is pressed, or in case of dynamic search, on keydown. But then,
@@ -165,6 +179,8 @@ $("#searchbutton").click(function() {
     // Loop over student listings
       $(".student-item.cf").each(function(){
         // If listing already has "hidden" class, remove it
+      //  $(this).css("display", "initial");
+
          if ($(this).hasClass("hidden")) {
            $(this).removeClass("hidden");
          }
@@ -173,8 +189,8 @@ $("#searchbutton").click(function() {
            $(this).removeClass("showsearch");
          }
 
-         if ($(this).hasClass("dontshow")) {
-           $(this).removeClass("dontshow");
+         if ($(this).hasClass("searchhide")) {
+           $(this).removeClass("searchhide");
          }
          //console.log($(this).find("h3").text());
          //console.log($(this).find(".email").text());
@@ -183,7 +199,7 @@ $("#searchbutton").click(function() {
           if ( ( ($(this).find("h3").text().toLowerCase().indexOf(searchtext)) < 0) ||   ((($(this).find(".email").text().toLowerCase().indexOf(searchtext)) < 0) ) ) {
               console.log("This listing is not a match.");
               $(this).addClass("hidden");
-              $(this).addClass("dontshow");
+              $(this).addClass("searchhide");
           }
           else {
             console.log("This listing is a match.")
@@ -193,10 +209,20 @@ $("#searchbutton").click(function() {
       })
    $(".pagination").remove();
    $("#list").removeClass("initialhide");
+   $("#message").remove();
 
 
    if (counter === 0) {
-      alert("I'm sorry, there were no results found.");
+      // put this in its own function
+      var msgDiv = document.createElement("DIV");
+      msgDiv.id = ("message");
+      visible.appendChild(msgDiv);
+      var msg = document.createElement("P");
+      msgDiv.appendChild(msg);
+      var msgText = document.createTextNode("Sorry, there were no results found.");
+      msg.appendChild(msgText);
+
+
     } else {
       totalSearchListings = document.getElementsByClassName("showsearch");
           for (var m=10; m<totalSearchListings.length; m++) {
@@ -224,6 +250,9 @@ $("#searchinput").keyup(function(){
         }
 
     $(".student-item.cf").each(function() {
+  //    $(this).fadeIn();
+    //  $(this).css("display", "initial");
+
       if ($(this).hasClass("hidden")) {
         $(this).removeClass("hidden");
       }
@@ -232,14 +261,14 @@ $("#searchinput").keyup(function(){
         $(this).removeClass("showsearch");
       }
 
-      if ($(this).hasClass("dontshow")) {
-        $(this).removeClass("dontshow");
+      if ($(this).hasClass("searchhide")) {
+        $(this).removeClass("searchhide");
       }
 
 
         if ( ($(this).find("h3").text().toLowerCase().search(new RegExp(searchterm, "i")) < 0) || ($(this).find(".email").text().toLowerCase().search(new RegExp(searchterm, "i")) < 0) ) {
           $(this).addClass("hidden");
-          $(this).addClass("dontshow");
+      $(this).addClass("searchhide");
         } else {
           counter += 1;
           $(this).addClass("showsearch");
@@ -248,9 +277,16 @@ $("#searchinput").keyup(function(){
 
     $(".pagination").remove();
     $("#list").removeClass("initialhide");
+    $("#message").remove();
 
        if (counter === 0) {
-          alert("I'm sorry, there were no results found.");
+         var msgDiv = document.createElement("DIV");
+         msgDiv.id = ("message");
+         visible.appendChild(msgDiv);
+         var msg = document.createElement("P");
+         msgDiv.appendChild(msg);
+         var msgText = document.createTextNode("Sorry, there were no results found.");
+         msg.appendChild(msgText);
         } else {
           totalSearchListings = document.getElementsByClassName("showsearch");
               for (var m=10; m<totalSearchListings.length; m++) {
@@ -267,13 +303,23 @@ $("#searchinput").keyup(function(){
 
 $(".paginationanchor").click(function(){
   $(".hidden").fadeOut("slow");
-  $(".dontshow").fadeOut("slow");
+  $(".searchhide").fadeOut("slow");
   $(".showsearch").fadeIn("slow");
 })
 
 $("#searchinput").keyup(function(){
   $(".hidden").fadeOut("slow");
-  $(".dontshow").fadeOut("slow");
+  $(".searchhide").fadeOut("slow");
   $(".showsearch").fadeIn("slow");
 })
 */
+/*
+$(".paginationanchor").click(function(){
+  $("html").fadeOut();
+  $("html").fadeIn();
+})*/
+
+/*$("#searchinput").keyup(function(){
+  $("html").fadeOut();
+  $("html").fadeIn();
+}) */

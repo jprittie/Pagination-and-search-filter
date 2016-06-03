@@ -133,3 +133,7 @@ ul.initialhide .student-item.cf:nth-of-type(n+11){
 .hidden {
     display: none;
 }
+
+.showsearch {
+    display: list-item;
+}
