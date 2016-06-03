@@ -206,3 +206,74 @@ $("#searchbutton").click(function() {
       paginate();
     }
 })
+
+// Section 4: Live search filter
+
+$("#searchinput").keyup(function(){
+    var searchterm = $(this).val();
+    counter = 0;
+
+    $(".pagination").remove();
+    $("#list").removeClass("initialhide");
+
+        // if search field goes back to being blank, reset initial pagination view
+        if ($("#searchinput").val().length === 0) {
+            $("#list").addClass("initialhide");
+            listings = totalStudentListings;
+            paginate();
+        }
+
+    $(".student-item.cf").each(function() {
+      if ($(this).hasClass("hidden")) {
+        $(this).removeClass("hidden");
+      }
+
+      if ($(this).hasClass("showsearch")) {
+        $(this).removeClass("showsearch");
+      }
+
+      if ($(this).hasClass("dontshow")) {
+        $(this).removeClass("dontshow");
+      }
+
+
+        if ( ($(this).find("h3").text().toLowerCase().search(new RegExp(searchterm, "i")) < 0) || ($(this).find(".email").text().toLowerCase().search(new RegExp(searchterm, "i")) < 0) ) {
+          $(this).addClass("hidden");
+          $(this).addClass("dontshow");
+        } else {
+          counter += 1;
+          $(this).addClass("showsearch");
+        }
+    })
+
+    $(".pagination").remove();
+    $("#list").removeClass("initialhide");
+
+       if (counter === 0) {
+          alert("I'm sorry, there were no results found.");
+        } else {
+          totalSearchListings = document.getElementsByClassName("showsearch");
+              for (var m=10; m<totalSearchListings.length; m++) {
+                totalSearchListings[m].classList.add("hidden");
+              }
+        }
+          listings = totalSearchListings;
+          paginate();
+
+})
+// so animation was affecting inital hide on live search
+/*
+// 5. Animation
+
+$(".paginationanchor").click(function(){
+  $(".hidden").fadeOut("slow");
+  $(".dontshow").fadeOut("slow");
+  $(".showsearch").fadeIn("slow");
+})
+
+$("#searchinput").keyup(function(){
+  $(".hidden").fadeOut("slow");
+  $(".dontshow").fadeOut("slow");
+  $(".showsearch").fadeIn("slow");
+})
+*/
