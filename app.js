@@ -51,6 +51,7 @@ function paginate(){
   addPageButtons();
 
 
+
  // When you click on an anchor, show correct 10 listings
     $(".paginationanchor").click(function(e){
         e.preventDefault();
