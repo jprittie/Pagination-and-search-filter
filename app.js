@@ -3,12 +3,9 @@ var $totalStudentListings = $(".student-item.cf");
 var $totalSearchListings;
 var $listings;
 var pageCount;
-
 var counter = 0;
 
 
-// delete line 22 after you've replaced visible throughout
-var visible = $("#list");
 
 // Section 1: Initial state
 // When document loads, hide all but first 10 students.
@@ -17,8 +14,9 @@ $(document).ready(function(){
 })
 
 // Section 2: Pagination filter
-// The following must work both for all the student listings and for search listings,
-// so I will wrap it all in function paginate()
+/* The following must work both for all the student listings and for search listings,
+   so I will wrap it all in function paginate(). */
+
 // Though initially, I must use all the student listings
 $listings = $totalStudentListings;
 
@@ -66,19 +64,16 @@ function paginate(){
         // Clear initial display class on ul
         $("#list").remove("initialhide");
 
-        //If listings === totalSearchListings, then anything not in totalSearchListings
-        //needs a class of hidden
-        //  $(".searchhide").addClass("hidden");
 
             // This for loop fades out all items in listings array that aren't needed
              for (var j=0; j<($listings.length); j++) {
 
-               if (j < startingRange || j > endingRange) {
-                  $listings.eq(j).fadeOut("slow");
-               }  else {
-                   console.log("Item " + j + " is in the range.");
-                    $listings.eq(j).fadeIn("slow");
-              }
+                 if (j < startingRange || j > endingRange) {
+                    $listings.eq(j).fadeOut("slow");
+                 }  else {
+                     console.log("Item " + j + " is in the range.");
+                      $listings.eq(j).fadeIn("slow");
+                 }
 
              }
 
@@ -92,79 +87,90 @@ paginate();
 // Section 3: Search
 
 //Create new div to contain search field and button
-//**newSearchDiv should really have an id instead of a class?
-// Do I really need all these IDs/classes?
 var $newSearchDiv = $("<div></div>").addClass("student-search");
 $("#pageheader").append($newSearchDiv);
-var $newInput = $("<input placeholder='Search for students...'>");
+var $newInput = $("<input id='searchinput' placeholder='Search for students...'>");
 $newSearchDiv.append($newInput);
 var $newButton = $("<button id='searchbutton'>Search</button>")
 $newSearchDiv.append($newButton);
 
-/*
-//When search button is pressed, this function will search listings for a match
+
+/* Then, create function that will be used later to display search results
+   for both regular and live searches */
+function displaySearch(){
+   if (counter === 0) {
+
+     var $msgDiv = $("<div id='message'></div>")
+     $("#list").append($msgDiv);
+     var $msg = $("<p></p>").text("Sorry, there were no results found.");
+     $msgDiv.append($msg);
+   } else {
+    /* Class initialhide doesn't work for search, so I have to hide more than 10 items
+       ... this makes me think there was a better way of doing this! */
+       $totalSearchListings = $(".showsearch");
+           for (var m=9; m<($totalSearchListings.length); m++) {
+             $totalSearchListings.eq(m).hide();
+       }
+   }
+ }
+
+/* Next, a function that will reset initial pagination view
+  if search field goes back to being blank */
+function blankSearch(){
+ if ($("#searchinput").val().length === 0) {
+     $("#list").addClass("initialhide");
+     $(".pagination").remove();
+     $listings = $totalStudentListings;
+     paginate();
+ }
+}
+
+
+// When search button is pressed, this function will search listings for a match
 $("#searchbutton").click(function() {
   console.log("Search started");
   counter = 0;
-  //totalSearchListings = "";
+
     // Get text in search field
     var searchtext = $("#searchinput").val().toLowerCase();
     console.log(searchtext);
     // Loop over student listings
       $(".student-item.cf").each(function(){
-        // If listing already has "hidden" class, remove it
-
-         if ($(this).hasClass("hidden")) {
-           $(this).removeClass("hidden");
-         }
-
+        /* If listing has already been a search match, remove "showsearch" class
+           (showsearch class will be used later to reset $listings to search listings) */
          if ($(this).hasClass("showsearch")) {
            $(this).removeClass("showsearch");
-         }
-
-         if ($(this).hasClass("searchhide")) {
-           $(this).removeClass("searchhide");
          }
 
           // Search for match; indexOf returns -1 if it is not in the array
           if ( ( ($(this).find("h3").text().toLowerCase().indexOf(searchtext)) < 0) ||   ((($(this).find(".email").text().toLowerCase().indexOf(searchtext)) < 0) ) ) {
               console.log("This listing is not a match.");
-              $(this).addClass("hidden");
-              $(this).addClass("searchhide");
+
+            $(this).hide();
           }
           else {
             console.log("This listing is a match.")
             counter += 1;
+            $(this).show();
             $(this).addClass("showsearch");
           }
       })
-   // Remove page numbers div so a new one can be created to correspond with search results
-   $(".pagination").remove();
-   // Do I really need the next line?
-   $("#list").removeClass("initialhide");
+
+   // Remove any existing "Sorry, no search results" messages
    $("#message").remove();
+   $("#list").removeClass("initialhide");
 
+   displaySearch();
+   blankSearch();
 
-   if (counter === 0) {
-      // put this in its own function
-      var $msgDiv = $("<div id='message'></div>")
-      $("#list").append($msgDiv);
-      var $msg = $("<p></p>").text("Sorry, there were no results found.");
-      $msgDiv.append($msg);
+    // Remove page numbers div so a new one can be created to correspond with search results
+    $(".pagination").remove();
+    $listings = $totalSearchListings;
+    paginate();
 
-
-    } else {
-      $totalSearchListings = $(".showsearch");
-          for (var m=10; m<($(totalSearchListings).length); m++) {
-            $totalSearchListings[m].addClass("hidden");
-    }
-      $listings = $totalSearchListings;
-      paginate();
-    }
 })
-*/
 
-/*
+
 
 // Section 4: Live search filter
 
@@ -175,35 +181,25 @@ $("#searchinput").keyup(function(){
     $(".pagination").remove();
     $("#list").removeClass("initialhide");
 
-        // If search field goes back to being blank, reset initial pagination view
-        if ($("#searchinput").val().length === 0) {
-            $("#list").addClass("initialhide");
-            listings = totalStudentListings;
-            paginate();
-        }
+    blankSearch();
 
         // Loop over all of the listings
         $(".student-item.cf").each(function() {
-
-          if ($(this).hasClass("hidden")) {
-            $(this).removeClass("hidden");
-          }
 
           if ($(this).hasClass("showsearch")) {
             $(this).removeClass("showsearch");
           }
 
-          if ($(this).hasClass("searchhide")) {
-            $(this).removeClass("searchhide");
-          }
 
           // Search names or emails for match
             if ( ($(this).find("h3").text().toLowerCase().search(new RegExp(searchterm, "i")) < 0) || ($(this).find(".email").text().toLowerCase().search(new RegExp(searchterm, "i")) < 0) ) {
-              $(this).addClass("hidden");
-              $(this).addClass("searchhide");
+
+              $(this).hide();
+
             } else {
               counter += 1;
               $(this).addClass("showsearch");
+              $(this).show();
             }
         })
 
@@ -211,24 +207,9 @@ $("#searchinput").keyup(function(){
     $("#list").removeClass("initialhide");
     $("#message").remove();
 
- // Put this in its own function
-    if (counter === 0) {
 
-       var $msgDiv = $("<div id='message'></div>")
-       $("#list").append($msgDiv);
-       var $msg = $("<p></p>").text("Sorry, there were no results found.");
-       $msgDiv.append($msg);
-
-
-     } else {
-       $totalSearchListings = $("showsearch");
-           for (var m=10; m<($($totalSearchListings).length); m++) {
-             $totalSearchListings[m].addClass("hidden");
-           }
-     }
-
+    displaySearch();
     $listings = $totalSearchListings;
     paginate();
 
 })
-*/
