@@ -52,7 +52,8 @@ function paginate(){
 
 
  // When you click on an anchor, show correct 10 listings
-    $(".paginationanchor").click(function(){
+    $(".paginationanchor").click(function(e){
+        e.preventDefault();
         var i = $(".paginationanchor").index(this);
         console.log("You clicked button number " + (i+1));
         var startingRange = (i*10);
