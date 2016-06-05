@@ -11,7 +11,7 @@ var counter = 0;
 // When document loads, hide all but first 10 students.
 $(document).ready(function(){
   $("#list").addClass("initialhide");
-})
+});
 
 // Section 2: Pagination filter
 /* The following must work both for all the student listings and for search listings,
@@ -79,7 +79,7 @@ function paginate(){
 
              }
 
-      })
+      });
 
 }
 
@@ -93,7 +93,7 @@ var $newSearchDiv = $("<div></div>").addClass("student-search");
 $("#pageheader").append($newSearchDiv);
 var $newInput = $("<input id='searchinput' placeholder='Search for students...'>");
 $newSearchDiv.append($newInput);
-var $newButton = $("<button id='searchbutton'>Search</button>")
+var $newButton = $("<button id='searchbutton'>Search</button>");
 $newSearchDiv.append($newButton);
 
 
@@ -104,7 +104,7 @@ function displaySearch(){
      $listings.length = 0;
      // And get rid of pagination numbers
      $(".pagination").remove();
-     var $msgDiv = $("<div id='message'></div>")
+     var $msgDiv = $("<div id='message'></div>");
      $("#list").append($msgDiv);
      var $msg = $("<p></p>").text("Sorry, there were no results found.");
      $msgDiv.append($msg);
@@ -154,12 +154,12 @@ $("#searchbutton").click(function() {
             $(this).hide();
           }
           else {
-            console.log("This listing is a match.")
+            console.log("This listing is a match.");
             counter += 1;
             $(this).show();
             $(this).addClass("showsearch");
           }
-      })
+      });
 
    // Remove any existing "Sorry, no search results" messages
    $("#message").remove();
@@ -178,7 +178,7 @@ $("#searchbutton").click(function() {
       paginate();
     }
 
-})
+});
 
 
 
@@ -211,7 +211,7 @@ $("#searchinput").keyup(function(){
               $(this).addClass("showsearch");
               $(this).show();
             }
-        })
+        });
 
     $(".pagination").remove();
     $("#list").removeClass("initialhide");
@@ -226,4 +226,4 @@ $("#searchinput").keyup(function(){
     }
 
 
-})
+});
