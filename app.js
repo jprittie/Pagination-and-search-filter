@@ -72,9 +72,9 @@ function paginate(){
 
                  if (j < startingRange || j > endingRange) {
                     $listings.eq(j).fadeOut("slow");
-                 }  else {
-                     console.log("Item " + j + " is in the range.");
-                      $listings.eq(j).fadeIn("slow");
+                 } else {
+                    console.log("Item " + j + " is in the range.");
+                    $listings.eq(j).fadeIn("slow");
                  }
 
              }
@@ -101,11 +101,14 @@ $newSearchDiv.append($newButton);
    for both regular and live searches */
 function displaySearch(){
    if (counter === 0) {
-
+     $listings.length = 0;
+     // And get rid of pagination numbers
+     $(".pagination").remove();
      var $msgDiv = $("<div id='message'></div>")
      $("#list").append($msgDiv);
      var $msg = $("<p></p>").text("Sorry, there were no results found.");
      $msgDiv.append($msg);
+
    } else {
     /* Class initialhide doesn't work for search, so I have to hide more than 10 items
        ... this makes me think there was a better way of doing this! */
@@ -162,13 +165,18 @@ $("#searchbutton").click(function() {
    $("#message").remove();
    $("#list").removeClass("initialhide");
 
-   displaySearch();
-   blankSearch();
+
 
     // Remove page numbers div so a new one can be created to correspond with search results
     $(".pagination").remove();
+    displaySearch();
+    blankSearch();
     $listings = $totalSearchListings;
-    paginate();
+
+    // If there are more than 10 listings, paginate
+    if ($listings.length > 10) {
+      paginate();
+    }
 
 })
 
@@ -212,6 +220,10 @@ $("#searchinput").keyup(function(){
 
     displaySearch();
     $listings = $totalSearchListings;
-    paginate();
+    // If there are more than 10 listings, paginate
+    if ($listings.length > 10) {
+      paginate();
+    }
+
 
 })
