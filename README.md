@@ -8,6 +8,7 @@ This project focuses on progressive enhancement. The goal is to improve the usab
 * Dynamically add a search field so that users can search through the list of students.
 * Users should be able to search by name or e-mail address.
 * Search results should also be paginated if there are more than 10 results.
+
 For extra credit:
 * Include simple animations when transitioning between pages.
 * As the user types in the search box, dynamically filter the student listings.
