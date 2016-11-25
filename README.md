@@ -1,6 +1,8 @@
 ##Pagination and search filter
 *Project 2 of the Treehouse Full Stack JavaScript course*
 
+You can [view the project here.](http://jprittie.github.io/Pagination-and-search-filter/)
+
 ###Project objectives:
 This project focuses on progressive enhancement. The goal is to improve the usability of a student-listing directory that contains too much information. Given HTML/CSS files, write JS to add pagination and a search filter.
 
